@@ -1,81 +1,90 @@
 import { LitElement, html, css } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { property, customElement, eventOptions } from 'lit/decorators.js';
 
-const logo = new URL('../../assets/open-wc-logo.svg', import.meta.url).href;
+import { Question, QuestionAnsweredEvent } from './interfaces';
+import { MAX_POINTS_PER_QUESTION, SCORING_RULES } from './constants';
+
+import './survey-question';
+
+const questions = new URL('../../assets/Madrs-s.json', import.meta.url).href;
+
 
 @customElement('flow-survey')
 export class FlowSurvey extends LitElement {
-  @property({ type: String }) header = 'My app';
+  @property({ type: Object }) answers = [] as number[];
+  @property({ type: String }) header = 'Flow Survey';
+  @property({ type: Number }) maxPoints: number = 0;
+  @property({ type: Object }) questions = [] as Question[];
+  @property({ type: Number }) totalPoints: number = 0;
+  @property({ type: String }) verdict: string = '';
 
   static styles = css`
     :host {
-      min-height: 100vh;
+      align-items: center;
+      background-color: var(--flow-survey-background-color);
+      color: #1a2b42;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
       font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-      max-width: 960px;
+      justify-content: flex-start;
       margin: 0 auto;
-      text-align: center;
-      background-color: var(--flow-survey-background-color);
-    }
-
-    main {
-      flex-grow: 1;
-    }
-
-    .logo {
-      margin-top: 36px;
-      animation: app-logo-spin infinite 20s linear;
-    }
-
-    @keyframes app-logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .app-footer {
-      font-size: calc(12px + 0.5vmin);
-      align-items: center;
-    }
-
-    .app-footer a {
-      margin-left: 5px;
+      max-width: 960px;
+      min-height: 100vh;
     }
   `;
 
-  render() {
+  async connectedCallback() {
+    super.connectedCallback();
+    
+    const questionData: Question[] = await fetch(questions)
+      .then(response => response.json());
+    this.questions = questionData;
+
+    this.answers = new Array(this.questions.length);
+
+    this.maxPoints = MAX_POINTS_PER_QUESTION * this.questions.length;
+  }
+
+  updateVerdict() {
+    this.totalPoints = this.answers.reduce((a, b) => a + b, 0);
+    this.verdict = SCORING_RULES.find(rule =>
+      this.totalPoints >= rule.lower && this.totalPoints <= rule.upper
+    )?.verdict || '';
+  }
+
+  @eventOptions({ passive: true })
+  private _onQuestionAnswered(event: QuestionAnsweredEvent) {
+    const { answer, number } = event.detail;
+    if (typeof answer === 'number' && typeof number === 'number') {
+      this.answers[number] = answer;
+    }
+
+    this.updateVerdict();
+  }
+
+  protected render() {
     return html`
       <main>
-        <div class="logo"><img alt="open-wc logo" src=${logo} /></div>
         <h1>${this.header}</h1>
 
-        <p>Edit <code>src/FlowSurvey.ts</code> and save to reload.</p>
-        <a
-          class="app-link"
-          href="https://open-wc.org/guides/developing-components/code-examples"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Code examples
-        </a>
-      </main>
+        There are ${this.questions.length} questions.
 
-      <p class="app-footer">
-        🚽 Made with love by
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/open-wc"
-          >open-wc</a
-        >.
-      </p>
+        <form id="flow-survey" @question-answered=${this._onQuestionAnswered}>
+          ${this.questions.map((question, number) => html`
+            <h2>Question ${number + 1}/${this.questions.length}</h2>
+            <survey-question .question=${question} .number=${number}></survey-question>
+          `)}
+        </form>
+        <div>
+          <h2>Your score</h2>
+          <p><span>${this.totalPoints}</span>/${this.maxPoints}</p>
+          <p>${this.verdict}</p>
+          <h3>What does this mean?</h3>
+          <p>This score indicates that you have ${this.verdict.toLowerCase()} symptoms</p>
+          <p>Remember that this questionaire is not a complete diagnosis, but rather a guideliens.</p>
+          <button type="reset" form="flow-survey">Close</button>
+        </div>
+      </main>
     `;
   }
 }
