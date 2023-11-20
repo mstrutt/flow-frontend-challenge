@@ -40,9 +40,14 @@ export class FlowSurvey extends LitElement {
       }
     }
 
+    .fs-form__section {
+      padding-top: 2em;
+      padding-bottom:  12vh;
+    }
+
     .fs-progress-header {
       font-size: var(--small-heading);
-      margin: 2em 0;
+      margin: 0 0 2em;
       text-align: center;
     }
   `;
@@ -63,7 +68,7 @@ export class FlowSurvey extends LitElement {
     this.questionComponenets = this.shadowRoot?.querySelectorAll('survey-question');
   }
 
-  firstUpdated() {
+  protected firstUpdated() {
     this.scoreModal = this.shadowRoot?.querySelector('score-modal');
   }
   
@@ -73,17 +78,45 @@ export class FlowSurvey extends LitElement {
 
   @eventOptions({ passive: true })
   private _resetForm() {
-    this.questionComponenets?.forEach(component => component.resetInput());
+    this.questionComponenets?.forEach((component, index) => {
+      component.resetInput();
+      // Focus the first question
+      if (!index) {
+        component.giveFocus();
+      }
+    });
+    this.answers = new Array(this.questions.length);
   }
 
   @eventOptions({ passive: true })
   private _onQuestionAnswered(event: QuestionAnsweredEvent) {
     const { answer, number } = event.detail;
-    if (typeof answer === 'number' && typeof number === 'number') {
-      this.answers[number] = answer;
+    if (typeof answer !== 'number' || typeof number !== 'number') {
+      return;
     }
 
+    this.answers[number] = answer;
     this._updateVerdict();
+
+    // If the focus has already left the question, don't adjust the focus or scroll
+    const thisQuestion = this.questionComponenets && this.questionComponenets[number];
+    if (!thisQuestion || !thisQuestion.matches(':focus-within')) {
+      return false;
+    }
+
+    // Focus and scroll smoothly to the next question
+    const nextQuestion = this.questionComponenets && this.questionComponenets[number + 1];
+    if (nextQuestion) {
+      // Get the current scroll coordinates
+      const x = window.scrollX
+      const y = window.scrollY;
+      // Shift the focus
+      nextQuestion.giveFocus();
+      // Reset scroll position to avoid the visual jump of moving focus
+      window.scrollTo(x, y);
+      // Smoothly scroll to the next question
+      nextQuestion.parentElement?.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   protected render() {
@@ -91,12 +124,12 @@ export class FlowSurvey extends LitElement {
       <main>
         <h1>Flow Survey</h1>
 
-        There are ${this.questions.length} questions.
-
-        <form id="flow-survey" @question-answered=${this._onQuestionAnswered}>
+        <form class="fs-form" id="flow-survey" @question-answered=${this._onQuestionAnswered}>
           ${this.questions.map((question, number) => html`
-            <h2 class="fs-progress-header">Question ${number + 1}/${this.questions.length}</h2>
-            <survey-question .question=${question} .number=${number}></survey-question>
+            <section class="fs-form__section" id="question-${number + 1}">
+              <h2 class="fs-progress-header">Question ${number + 1}/${this.questions.length}</h2>
+              <survey-question .question=${question} .number=${number}></survey-question>
+            </section>
           `)}
         </form>
         <score-modal @reset=${this._resetForm} .answers=${this.answers}></score-modal>

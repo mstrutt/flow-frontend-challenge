@@ -129,7 +129,7 @@ export class ScoreModal extends LitElement {
     this.updateVerdict();
   }
 
-  firstUpdated() {
+  protected firstUpdated() {
     this.closeButton = this.shadowRoot?.getElementById(this.closeButtonId);
   }
 

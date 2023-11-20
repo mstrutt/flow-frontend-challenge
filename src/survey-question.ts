@@ -14,11 +14,13 @@ export class SurveyQuestion extends LitElement {
   @property({ type: Number }) number!: number;
   @property({ type: Object }) question!: Question;
   @property({ type: Object }) responses: Response[] = [];
+  private firstInput?: HTMLInputElement | null;
+  private answerTimeout: any;
 
   static styles = css`
     .fs-question {
       border: none;
-      margin: 0 auto 12vh;
+      margin: 0 auto;
       max-width: 34em;
       padding: 0 var(--spacing-unit);
     }
@@ -42,6 +44,7 @@ export class SurveyQuestion extends LitElement {
 
     .fs-answer {
       align-items: center;
+      cursor: pointer;
       display: flex;
       padding: calc(var(--spacing-unit) / 3) 0;
     }
@@ -97,7 +100,11 @@ export class SurveyQuestion extends LitElement {
       }));
   }
 
-  private _answerSelected(answer: number) {
+  protected firstUpdated() {
+    this.firstInput = this.shadowRoot?.querySelector('input') as HTMLInputElement;
+  }
+
+  answerSelected(answer: number) {
     const questionAnsweredEvent = new CustomEvent('question-answered', {
       detail: { 
         number: this.number,
@@ -108,10 +115,18 @@ export class SurveyQuestion extends LitElement {
     this.dispatchEvent(questionAnsweredEvent);
   }
 
+  giveFocus() {
+    this.firstInput?.focus();
+  }
+
   resetInput() {
-    console.log('resetInput');
-    const input = this.shadowRoot?.querySelector('input:checked') as HTMLInputElement;
-    input.checked = false;
+    const selectedInput = this.shadowRoot?.querySelector('input:checked') as HTMLInputElement;
+    selectedInput.checked = false;
+  }
+
+  private _answerSelected(answer: number) {
+    clearTimeout(this.answerTimeout);
+    this.answerTimeout = setTimeout(() => this.answerSelected(answer), 800);
   }
 
   protected render() {
