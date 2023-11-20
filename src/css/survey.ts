@@ -18,11 +18,12 @@ export const surveyStyles = css`
 
   @media screen and (min-width: 1000px) {
     :host {
-      font-size: 24px;
+      font-size: 22px;
     }
   }
 
   .fs-form__section {
+    min-height: 100vh;
     padding-top: 2em;
     padding-bottom:  12vh;
   }

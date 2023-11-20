@@ -22,6 +22,37 @@ export const questionStyles = css`
     margin-top: 2.6em;
     padding-top: 2em;
   }
+
+  @media screen and (min-width: 1000px) {
+    .fs-question {
+      display: grid;
+      grid-template-columns: 40% 60%;
+      grid-template-rows: auto auto auto;
+      max-width: 60em;
+    }
+
+    .fs-question__title {
+      /* Fixes Safari */
+      white-space: nowrap;
+    }
+
+    .fs-question__question {
+      margin-top: calc(var(--spacing-unit) * 4/3);
+    }
+
+    .fs-question__paragraph {
+      margin-top: 0;
+    }
+
+    .fs-question__answers {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      border-top: none;
+      border-left: 1px solid var(--border-color);
+      margin: var(--spacing-unit) 0 0 calc(var(--spacing-unit) * 2);
+      padding: 0 0 0 calc(var(--spacing-unit) * 2);
+    }
+  }
 `;
 
 export const answerStyles = css`

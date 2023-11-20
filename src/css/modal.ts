@@ -80,4 +80,10 @@ export const modalStyles = css`
     margin: auto auto 0.25em;
     width: 97%;
   }
+
+  @media screen and (min-width: 1100px) {
+    .fs-score-modal__header {
+      padding-top: calc(var(--spacing-unit) + 10vh);
+    }
+  }
 `;
