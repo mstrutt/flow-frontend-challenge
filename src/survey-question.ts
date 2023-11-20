@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { property, customElement, eventOptions } from 'lit/decorators.js';
+import { property, customElement } from 'lit/decorators.js';
 
 import { Question, QuestionAnsweredEvent } from './interfaces';
 import { MAX_POINTS_PER_QUESTION } from './constants';
@@ -16,8 +16,70 @@ export class SurveyQuestion extends LitElement {
   @property({ type: Object }) responses: Response[] = [];
 
   static styles = css`
-    label {
+    .fs-question {
+      border: none;
+      margin: 0 auto 12vh;
+      max-width: 34em;
+      padding: 0 var(--spacing-unit);
+    }
+
+    .fs-question__title {
+      font-size: var(--large-heading);
+      padding: 0;
+    }
+
+    .fs-question__question {
+      font-size: var(--large-paragraph);
+      margin-top: 0.6em;
+      margin-bottom: 1.2em;  
+    }
+
+    .fs-question__answers {
+      border-top: 1px solid var(--border-color);
+      margin-top: 2.6em;
+      padding-top: 2em;
+    }
+
+    .fs-answer {
+      align-items: center;
+      display: flex;
+      padding: calc(var(--spacing-unit) / 3) 0;
+    }
+
+    .fs-answer__input {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .fs-answer__number {
+      background-color: var(--off-white);
+      border-radius: calc(var(--tap-target-size) / 2);
+      color: var(--black);
       display: block;
+      flex-shrink: 0;
+      height: var(--tap-target-size);
+      line-height: var(--tap-target-size);
+      margin: calc(var(--spacing-unit) / 3) var(--spacing-unit) calc(var(--spacing-unit) / 3) 0;
+      text-align: center;
+      transition: background-color .15s;
+      width: var(--tap-target-size);
+    }
+
+    .fs-answer__input:focus-visible + .fs-answer__number {
+      outline: 2px solid var(--dark-blue);
+    }
+
+    .fs-answer__input:checked + .fs-answer__number {
+      background-color: var(--light-blue);
+    }
+
+    .fs-answer__text {
+      margin: calc(var(--spacing-unit) / 3) 0;
     }
   `;
   
@@ -48,23 +110,26 @@ export class SurveyQuestion extends LitElement {
 
   protected render() {
     return html`
-      <fieldset>
-        <legend>${this.question.title}</legend>
-        <p>${this.question.question}</p>
-        ${this.question.paragraph && html`<p>${this.question.paragraph}</p>`}
-        ${this.responses.map(response => html`
-          <label for="${this.id}-${response.value}">
-            <input
-              @input=${() => this._answerSelected(response.value)}
-              id="${this.id}-${response.value}"
-              name="${this.id}"
-              type="radio"
-              value="${response.value}"
-            />
-            <span>${response.value}</span>
-            ${response.label && html`<span>${response.label}</span>`}
-          </label>
-        `)}
+      <fieldset class="fs-question">
+        <legend class="fs-question__title">${this.question.title}</legend>
+        <p class="fs-question__question">${this.question.question}</p>
+        ${this.question.paragraph && html`<p class="fs-question__paragraph">${this.question.paragraph}</p>`}
+        <div class="fs-question__answers">
+          ${this.responses.map(response => html`
+            <label class="fs-answer" for="${this.id}-${response.value}">
+              <input
+                @input=${() => this._answerSelected(response.value)}
+                class="fs-answer__input"
+                id="${this.id}-${response.value}"
+                name="${this.id}"
+                type="radio"
+                value="${response.value}"
+              />
+              <span class="fs-answer__number">${response.value}</span>
+              ${response.label && html`<span class="fs-answer__text">${response.label}</span>`}
+            </label>
+          `)}
+        </div>
       </fieldset>
     `;
   }

@@ -14,13 +14,42 @@
 
   <style>
     :root {
+      --black: #000000;
+      --dark-blue: #15435a;
+      --dark-green: #106549;
+      --dark-grey: #232323;
+      --mid-grey: #808080;
+      --light-blue: #d1e9e9;
+      --light-grey: #d9d9d9;
+      --off-white: #ebebeb;
+      --white: #ffffff;
+      --white--faded: rgba(255, 255, 255, .3);
+
+      --body-copy: var(--dark-grey);
+      --body-background: var(--white);
+      --border-color: var(--light-grey);
+      
       --font-weight--bold: 600;
       --font-weight--normal: 400;
+      
+      --extra-large-heading: 4.125em;
+      --large-heading: 2em;
+      --small-heading: 1.125em;
+      --large-paragraph: 1.25em;
+
+      --tap-target-size: 2.75em;
+      --spacing-unit: 0.9375em;
     }
 
+    /* Accessibility Overrides */
+    :root {
+      --mid-grey: #757575;
+      --white--faded: rgba(255, 255, 255, .4);
     }
-
+    
     html {
+      background-color: var(--body-background);
+      color: var(--body-copy);
       font-family: 'Open Sans', sans-serif;
       -webkit-font-smoothing: antialiased;  
       font-weight: var(--font-weight--normal);
