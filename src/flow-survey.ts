@@ -12,7 +12,7 @@ import './survey-question';
 import './score-modal';
 
 const questions = new URL('../../assets/Madrs-s.json', import.meta.url).href;
-
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion)').matches;
 
 @customElement('flow-survey')
 export class FlowSurvey extends LitElement {
@@ -89,7 +89,9 @@ export class FlowSurvey extends LitElement {
       // Reset scroll position to avoid the visual jump of moving focus
       window.scrollTo(x, y);
       // Smoothly scroll to the next question
-      nextQuestion.parentElement?.scrollIntoView({ behavior: 'smooth' });
+      nextQuestion.parentElement?.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
     }
   }
 

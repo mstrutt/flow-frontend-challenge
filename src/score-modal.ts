@@ -3,7 +3,7 @@ import { property, customElement } from 'lit/decorators.js';
 
 import { CSS_CLASSES, MAX_POINTS_PER_QUESTION, SCORING_RULES } from './constants';
 
-import { buttonStyles, typographyStyles } from './css/shared';
+import { animationStyles, buttonStyles, typographyStyles } from './css/shared';
 import { modalStyles } from './css/modal';
 
 @customElement('score-modal')
@@ -14,11 +14,13 @@ export class ScoreModal extends LitElement {
   @property({ type: String }) verdict: string = '';
   @property({ type: String }) verdictLowercase: string = '';
   closeButton?: HTMLElement | null;
+  isVisible: boolean = false;
   private closeButtonId: string = 'close-button';
   private modalTitleId: string = 'modal-title';
   private modalDescriptionId: string = 'modal-description';
 
   static styles = [
+    animationStyles,
     buttonStyles,
     typographyStyles,
     modalStyles,
@@ -29,14 +31,16 @@ export class ScoreModal extends LitElement {
 
     this.onKeydown = this.onKeydown.bind(this);
   }
-
+  
   connectedCallback() {
     super.connectedCallback();
-
+    
+    this.classList.add(CSS_CLASSES.MODAL);
     this.setAttribute('role', 'dialog');
     this.setAttribute('aria-modal', 'true');
     this.setAttribute('aria-labelledby', this.modalTitleId);
     this.setAttribute('aria-describedby', this.modalDescriptionId);
+    this.setAttribute('aria-hidden', 'true');
 
     this.updateVerdict();
   }
@@ -62,16 +66,36 @@ export class ScoreModal extends LitElement {
   }
 
   showVerdict() {
+    if (this.isVisible) {
+      return;
+    }
+
+    this.isVisible = true;
     this.ariaHidden = 'false';
     document.body.classList.add(CSS_CLASSES.HAS_MODAL);
     window.addEventListener('keydown', this.onKeydown);
     this.focus();
+
   }
 
   hideVerdict() {
-    this.ariaHidden = 'true';
-    document.body.classList.remove(CSS_CLASSES.HAS_MODAL);
-    window.removeEventListener('keydown', this.onKeydown);
+    if (!this.isVisible) {
+      return;
+    }
+
+    // Set immidately to avoid double closing
+    this.isVisible = false;
+
+    // Finish closing the modal at the end of the fadeOut animation
+    this.addEventListener('animationend', () => {
+      this.ariaHidden = 'true';
+      document.body.classList.remove(CSS_CLASSES.HAS_MODAL);
+      this.classList.remove(CSS_CLASSES.MODAL_FADE_OUT);
+      window.removeEventListener('keydown', this.onKeydown);
+    }, { once: true });
+    // Add the class to begin the animation
+    this.classList.add(CSS_CLASSES.MODAL_FADE_OUT);
+    
   }
   
   resetVerdict() {
@@ -100,24 +124,22 @@ export class ScoreModal extends LitElement {
 
   protected render() {
     return html`
-      <div class="fs-score-modal">
-        <div class="fs-score-modal__header">
-          <h2 id="${this.modalTitleId}" class="fs-score-modal__title fs-t-large-heading">Your score</h2>
-          <p class="fs-score-modal__points">${this.totalPoints}<span class="fs-score-modal__out-of">/${this.maxPoints}</span></p>
-          <p id="${this.modalDescriptionId}" class="fs-score-modal__verdict">${this.verdict}</p>
-        </div>
-        <div class="fs-score-modal__body">
-          <h3 class="fs-score-modal__subtitle fs-t-large-paragraph">What does this mean?</h3>
-          <p class="fs-score-modal__explanation fs-t-large-paragraph">This score indicates that you have ${this.verdictLowercase} symptoms</p>
-          <p class="fs-score-modal__disclaimer">Remember that this questionnaire is not a complete diagnosis, but rather a guideline.</p>
-          <button
-            @click=${this._onCloseClick}
-            class="fs-button fs-button--primary fs-score-modal__close
-            form="flow-survey"
-            id="${this.closeButtonId}"
-            type="reset"
-          >Close</button>
-        </div>
+      <div class="fs-score-modal__header">
+        <h2 id="${this.modalTitleId}" class="fs-score-modal__title fs-t-large-heading">Your score</h2>
+        <p class="fs-score-modal__points">${this.totalPoints}<span class="fs-score-modal__out-of">/${this.maxPoints}</span></p>
+        <p id="${this.modalDescriptionId}" class="fs-score-modal__verdict">${this.verdict}</p>
+      </div>
+      <div class="fs-score-modal__body">
+        <h3 class="fs-score-modal__subtitle fs-t-large-paragraph">What does this mean?</h3>
+        <p class="fs-score-modal__explanation fs-t-large-paragraph">This score indicates that you have ${this.verdictLowercase} symptoms</p>
+        <p class="fs-score-modal__disclaimer">Remember that this questionnaire is not a complete diagnosis, but rather a guideline.</p>
+        <button
+          @click=${this._onCloseClick}
+          class="fs-button fs-button--primary fs-score-modal__close
+          form="flow-survey"
+          id="${this.closeButtonId}"
+          type="reset"
+        >Close</button>
       </div>
     `;
   }

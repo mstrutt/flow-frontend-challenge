@@ -51,3 +51,49 @@ export const typographyStyles = css`
     font-weight: var(--font-weight--normal);
   }
 `;
+
+export const animationStyles = css`
+  @keyframes flashUIColor {
+    33%,
+    to {
+      background-color: var(--ui-color--active);
+      opacity: 1;
+    }
+
+    from,
+    66% {
+      background-color: var(--ui-color);
+      opacity: .9;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion) {
+    *,
+    :host {
+      animation-delay: 0s !important;
+      animation-duration: 0s !important;
+      transition-delay: 0s !important;
+      transition-duration: 0s !important;
+    }
+  }
+`;

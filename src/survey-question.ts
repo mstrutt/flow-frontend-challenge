@@ -5,7 +5,7 @@ import { Question, QuestionAnsweredEvent } from './interfaces';
 import { MAX_POINTS_PER_QUESTION } from './constants';
 
 import { questionStyles, answerStyles } from './css/question';
-import { helperStyles, typographyStyles } from './css/shared';
+import { animationStyles, helperStyles, typographyStyles } from './css/shared';
 
 interface Response {
   label: string|null,
@@ -21,6 +21,7 @@ export class SurveyQuestion extends LitElement {
   private answerTimeout: any;
 
   static styles = [
+    animationStyles,
     helperStyles,
     typographyStyles,
     questionStyles,
@@ -67,7 +68,7 @@ export class SurveyQuestion extends LitElement {
 
   private _answerSelected(answer: number) {
     clearTimeout(this.answerTimeout);
-    this.answerTimeout = setTimeout(() => this.answerSelected(answer), 800);
+    this.answerTimeout = setTimeout(() => this.answerSelected(answer), 900);
   }
 
   protected render() {

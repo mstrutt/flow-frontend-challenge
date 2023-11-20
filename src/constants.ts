@@ -20,4 +20,6 @@ export const MAX_POINTS_PER_QUESTION = 6;
 
 export const CSS_CLASSES = {
   HAS_MODAL: 'has-modal',
+  MODAL: 'fs-score-modal',
+  MODAL_FADE_OUT: 'fs-score-modal--fade-out',
 };

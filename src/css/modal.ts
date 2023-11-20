@@ -1,23 +1,30 @@
 import { css } from 'lit';
 
 export const modalStyles = css`
-  :host([aria-hidden="true"]) {
-    display: none;
-  }
-
-  .fs-score-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow-y: auto;
-
+  :host(.fs-score-modal) {
+    animation-duration: .4s;
+    animation-fill-mode: both;
+    animation-name: fadeIn;
+    animation-timing-function: ease-in-out;
     background-color: var(--body-background);
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
     text-align: center;
+    top: 0;
+  }
+
+  :host(.fs-score-modal--fade-out) {
+    animation-name: fadeOut;
+  }
+
+  :host([aria-hidden="true"]) {
+    display: none;
   }
 
   .fs-score-modal__header {

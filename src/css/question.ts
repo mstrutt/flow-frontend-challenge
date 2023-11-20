@@ -42,7 +42,6 @@ export const answerStyles = css`
     line-height: var(--tap-target-size);
     margin: calc(var(--spacing-unit) / 3) var(--spacing-unit) calc(var(--spacing-unit) / 3) 0;
     text-align: center;
-    transition: background-color .15s;
     width: var(--tap-target-size);
   }
 
@@ -51,6 +50,11 @@ export const answerStyles = css`
   }
 
   .fs-answer__input:checked + .fs-answer__number {
+    animation-delay: .2s;
+    animation-duration: .35s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+    animation-name: flashUIColor;
     background-color: var(--ui-color--active);
   }
 
