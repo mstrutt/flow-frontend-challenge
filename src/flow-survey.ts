@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import { property, customElement, eventOptions } from 'lit/decorators.js';
 
 import { Question, QuestionAnsweredEvent } from './interfaces';

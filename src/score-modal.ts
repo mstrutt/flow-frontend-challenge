@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import { property, customElement } from 'lit/decorators.js';
 
 import { CSS_CLASSES, MAX_POINTS_PER_QUESTION, SCORING_RULES } from './constants';
