@@ -27,7 +27,6 @@
       --white: #ffffff;
       --white--faded: rgba(255, 255, 255, .3);
 
-
       /* Accessibility Overrides */
       --mid-grey: #757575;
       --white--faded: rgba(255, 255, 255, .4);
@@ -59,6 +58,14 @@
       /* Sizing */
       --tap-target-size: 2.75em;
       --spacing-unit: 0.9375em;
+    }
+
+    @media (prefers-contrast: more) {
+      :root {
+        --score-text--muted: rgba(255, 255, 255, .5);
+        --ui-color--active: #9fdfdf;
+        --body-copy--muted: var(--dark-grey);
+      }
     }
     
     html {
