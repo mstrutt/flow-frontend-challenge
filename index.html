@@ -14,9 +14,11 @@
 
   <style>
     :root {
+      /* Design Colours */
       --black: #000000;
       --dark-blue: #15435a;
       --dark-green: #106549;
+      --dark-green--lighter: #137756;
       --dark-grey: #232323;
       --mid-grey: #808080;
       --light-blue: #d1e9e9;
@@ -25,26 +27,38 @@
       --white: #ffffff;
       --white--faded: rgba(255, 255, 255, .3);
 
+
+      /* Accessibility Overrides */
+      --mid-grey: #757575;
+      --white--faded: rgba(255, 255, 255, .4);
+
+      /* UI Colours */
       --body-copy: var(--dark-grey);
+      --body-copy--muted: var(--mid-grey);
       --body-background: var(--white);
       --border-color: var(--light-grey);
+      --button-background--primary: var(--dark-green);
+      --button-background--primary-hover: var(--dark-green--lighter);
+      --button-text--primary: var(--white);
+      --score-background: var(--dark-blue);
+      --score-text: var(--white);
+      --score-text--muted: var(--white--faded);
+      --ui-color: var(--off-white);
+      --ui-color--active: var(--light-blue);
+      --ui-color--focus: var(--dark-blue);
+      --ui-text-color: var(--black);
       
+      /* Typography */
       --font-weight--bold: 600;
       --font-weight--normal: 400;
-      
       --extra-large-heading: 4.125em;
       --large-heading: 2em;
       --small-heading: 1.125em;
       --large-paragraph: 1.25em;
 
+      /* Sizing */
       --tap-target-size: 2.75em;
       --spacing-unit: 0.9375em;
-    }
-
-    /* Accessibility Overrides */
-    :root {
-      --mid-grey: #757575;
-      --white--faded: rgba(255, 255, 255, .4);
     }
     
     html {

@@ -4,6 +4,9 @@ import { property, customElement } from 'lit/decorators.js';
 import { Question, QuestionAnsweredEvent } from './interfaces';
 import { MAX_POINTS_PER_QUESTION } from './constants';
 
+import { questionStyles, answerStyles } from './css/question';
+import { helperStyles } from './css/shared';
+
 interface Response {
   label: string|null,
   value: number,
@@ -17,74 +20,11 @@ export class SurveyQuestion extends LitElement {
   private firstInput?: HTMLInputElement | null;
   private answerTimeout: any;
 
-  static styles = css`
-    .fs-question {
-      border: none;
-      margin: 0 auto;
-      max-width: 34em;
-      padding: 0 var(--spacing-unit);
-    }
-
-    .fs-question__title {
-      font-size: var(--large-heading);
-      padding: 0;
-    }
-
-    .fs-question__question {
-      font-size: var(--large-paragraph);
-      margin-top: 0.6em;
-      margin-bottom: 1.2em;  
-    }
-
-    .fs-question__answers {
-      border-top: 1px solid var(--border-color);
-      margin-top: 2.6em;
-      padding-top: 2em;
-    }
-
-    .fs-answer {
-      align-items: center;
-      cursor: pointer;
-      display: flex;
-      padding: calc(var(--spacing-unit) / 3) 0;
-    }
-
-    .fs-answer__input {
-      clip: rect(0 0 0 0);
-      clip-path: inset(50%);
-      height: 1px;
-      overflow: hidden;
-      position: absolute;
-      white-space: nowrap;
-      width: 1px;
-    }
-
-    .fs-answer__number {
-      background-color: var(--off-white);
-      border-radius: calc(var(--tap-target-size) / 2);
-      color: var(--black);
-      display: block;
-      flex-shrink: 0;
-      height: var(--tap-target-size);
-      line-height: var(--tap-target-size);
-      margin: calc(var(--spacing-unit) / 3) var(--spacing-unit) calc(var(--spacing-unit) / 3) 0;
-      text-align: center;
-      transition: background-color .15s;
-      width: var(--tap-target-size);
-    }
-
-    .fs-answer__input:focus-visible + .fs-answer__number {
-      outline: 2px solid var(--dark-blue);
-    }
-
-    .fs-answer__input:checked + .fs-answer__number {
-      background-color: var(--light-blue);
-    }
-
-    .fs-answer__text {
-      margin: calc(var(--spacing-unit) / 3) 0;
-    }
-  `;
+  static styles = [
+    helperStyles,
+    questionStyles,
+    answerStyles,
+  ];
   
   connectedCallback() {
     super.connectedCallback();
@@ -140,7 +80,7 @@ export class SurveyQuestion extends LitElement {
             <label class="fs-answer" for="${this.id}-${response.value}">
               <input
                 @input=${() => this._answerSelected(response.value)}
-                class="fs-answer__input"
+                class="fs-answer__input fs-h-visually-hidden"
                 id="${this.id}-${response.value}"
                 name="${this.id}"
                 type="radio"

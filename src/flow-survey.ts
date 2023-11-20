@@ -5,6 +5,9 @@ import { Question, QuestionAnsweredEvent } from './interfaces';
 import { SurveyQuestion } from './survey-question';
 import { ScoreModal } from './score-modal';
 
+import { helperStyles } from './css/shared';
+import { surveyStyles } from './css/survey';
+
 import './survey-question';
 import './score-modal';
 
@@ -18,39 +21,10 @@ export class FlowSurvey extends LitElement {
   scoreModal?: ScoreModal | null;
   questionComponenets?: NodeListOf<SurveyQuestion>;
 
-  static styles = css`
-    :host {
-      align-items: stretch;
-      display: flex;
-      flex-direction: column;
-      font-size: 16px;
-      justify-content: flex-start;
-      min-height: 100vh;
-    }
-
-    @media screen and (min-width: 420px) and (max-width: 999px) {
-      :host {
-        font-size: calc(14px + 1vw);
-      }
-    }
-
-    @media screen and (min-width: 1000px) {
-      :host {
-        font-size: 24px;
-      }
-    }
-
-    .fs-form__section {
-      padding-top: 2em;
-      padding-bottom:  12vh;
-    }
-
-    .fs-progress-header {
-      font-size: var(--small-heading);
-      margin: 0 0 2em;
-      text-align: center;
-    }
-  `;
+  static styles = [
+    helperStyles,
+    surveyStyles,
+  ];
 
   async connectedCallback() {
     super.connectedCallback();
@@ -122,7 +96,7 @@ export class FlowSurvey extends LitElement {
   protected render() {
     return html`
       <main>
-        <h1>Flow Survey</h1>
+        <h1 class="fs-h-visually-hidden">Flow Survey</h1>
 
         <form class="fs-form" id="flow-survey" @question-answered=${this._onQuestionAnswered}>
           ${this.questions.map((question, number) => html`
