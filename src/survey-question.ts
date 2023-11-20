@@ -108,6 +108,12 @@ export class SurveyQuestion extends LitElement {
     this.dispatchEvent(questionAnsweredEvent);
   }
 
+  resetInput() {
+    console.log('resetInput');
+    const input = this.shadowRoot?.querySelector('input:checked') as HTMLInputElement;
+    input.checked = false;
+  }
+
   protected render() {
     return html`
       <fieldset class="fs-question">

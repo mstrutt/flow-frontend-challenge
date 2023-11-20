@@ -17,3 +17,7 @@ export const SCORING_RULES = [{
 }];
 
 export const MAX_POINTS_PER_QUESTION = 6;
+
+export const CSS_CLASSES = {
+  HAS_MODAL: 'has-modal',
+};
