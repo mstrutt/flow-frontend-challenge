@@ -101,7 +101,7 @@ export class FlowSurvey extends LitElement {
         <form class="fs-form" id="flow-survey" @question-answered=${this._onQuestionAnswered}>
           ${this.questions.map((question, number) => html`
             <section class="fs-form__section" id="question-${number + 1}">
-              <h2 class="fs-progress-header">Question ${number + 1}/${this.questions.length}</h2>
+              <h2 class="fs-progress-header fs-t-large-heading">Question ${number + 1}/${this.questions.length}</h2>
               <survey-question .question=${question} .number=${number}></survey-question>
             </section>
           `)}

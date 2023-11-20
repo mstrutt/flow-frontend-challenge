@@ -29,8 +29,6 @@ export const modalStyles = css`
   }
 
   .fs-score-modal__title {
-    font-size: var(--large-heading);
-    font-weight: var(--font-weight--normal);
     margin: 0;
   }
 
@@ -58,13 +56,11 @@ export const modalStyles = css`
   }
 
   .fs-score-modal__subtitle {
-    font-size: var(--large-paragraph);
     font-weight: var(--font-weight--bold);
     margin: 0;
   }
 
   .fs-score-modal__explanation {
-    font-size: var(--large-paragraph);
     margin: .4em 0;
   }
 

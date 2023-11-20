@@ -39,3 +39,15 @@ export const helperStyles = css`
     width: 1px;
   }
 `;
+
+export const typographyStyles = css`
+  .fs-t-large-heading {
+    font-size: var(--large-heading);
+    font-weight: var(--font-weight--normal);
+  }
+
+  .fs-t-large-paragraph {
+    font-size: var(--large-paragraph);
+    font-weight: var(--font-weight--normal);
+  }
+`;

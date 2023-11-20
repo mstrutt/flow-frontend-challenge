@@ -3,7 +3,7 @@ import { property, customElement } from 'lit/decorators.js';
 
 import { CSS_CLASSES, MAX_POINTS_PER_QUESTION, SCORING_RULES } from './constants';
 
-import { buttonStyles } from './css/shared';
+import { buttonStyles, typographyStyles } from './css/shared';
 import { modalStyles } from './css/modal';
 
 @customElement('score-modal')
@@ -20,6 +20,7 @@ export class ScoreModal extends LitElement {
 
   static styles = [
     buttonStyles,
+    typographyStyles,
     modalStyles,
   ];
 
@@ -101,13 +102,13 @@ export class ScoreModal extends LitElement {
     return html`
       <div class="fs-score-modal">
         <div class="fs-score-modal__header">
-          <h2 id="${this.modalTitleId}" class="fs-score-modal__title">Your score</h2>
+          <h2 id="${this.modalTitleId}" class="fs-score-modal__title fs-t-large-heading">Your score</h2>
           <p class="fs-score-modal__points">${this.totalPoints}<span class="fs-score-modal__out-of">/${this.maxPoints}</span></p>
           <p id="${this.modalDescriptionId}" class="fs-score-modal__verdict">${this.verdict}</p>
         </div>
         <div class="fs-score-modal__body">
-          <h3 class="fs-score-modal__subtitle">What does this mean?</h3>
-          <p class="fs-score-modal__explanation">This score indicates that you have ${this.verdictLowercase} symptoms</p>
+          <h3 class="fs-score-modal__subtitle fs-t-large-paragraph">What does this mean?</h3>
+          <p class="fs-score-modal__explanation fs-t-large-paragraph">This score indicates that you have ${this.verdictLowercase} symptoms</p>
           <p class="fs-score-modal__disclaimer">Remember that this questionnaire is not a complete diagnosis, but rather a guideline.</p>
           <button
             @click=${this._onCloseClick}

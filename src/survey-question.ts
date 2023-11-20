@@ -5,7 +5,7 @@ import { Question, QuestionAnsweredEvent } from './interfaces';
 import { MAX_POINTS_PER_QUESTION } from './constants';
 
 import { questionStyles, answerStyles } from './css/question';
-import { helperStyles } from './css/shared';
+import { helperStyles, typographyStyles } from './css/shared';
 
 interface Response {
   label: string|null,
@@ -22,6 +22,7 @@ export class SurveyQuestion extends LitElement {
 
   static styles = [
     helperStyles,
+    typographyStyles,
     questionStyles,
     answerStyles,
   ];
@@ -72,8 +73,8 @@ export class SurveyQuestion extends LitElement {
   protected render() {
     return html`
       <fieldset class="fs-question">
-        <legend class="fs-question__title">${this.question.title}</legend>
-        <p class="fs-question__question">${this.question.question}</p>
+        <legend class="fs-question__title fs-t-large-heading">${this.question.title}</legend>
+        <p class="fs-question__question fs-t-large-paragraph">${this.question.question}</p>
         ${this.question.paragraph && html`<p class="fs-question__paragraph">${this.question.paragraph}</p>`}
         <div class="fs-question__answers">
           ${this.responses.map(response => html`

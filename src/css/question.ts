@@ -9,12 +9,10 @@ export const questionStyles = css`
   }
 
   .fs-question__title {
-    font-size: var(--large-heading);
     padding: 0;
   }
 
   .fs-question__question {
-    font-size: var(--large-paragraph);
     margin-top: 0.6em;
     margin-bottom: 1.2em;  
   }
