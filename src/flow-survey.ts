@@ -68,13 +68,15 @@ export class FlowSurvey extends LitElement {
     if (typeof answer !== 'number' || typeof number !== 'number') {
       return;
     }
-
+    
     this.answers[number] = answer;
     this._updateVerdict();
-
-    // If the focus has already left the question, don't adjust the focus or scroll
+    
+    // If the focus has already left the question, don't adjust the focus or scroll.
+    // Safari doesn't track activeElement properly in the shadowDOM - checking the
+    // document.activeElement is this element prevents a false positive.
     const thisQuestion = this.questionComponenets && this.questionComponenets[number];
-    if (!thisQuestion || !thisQuestion.matches(':focus-within')) {
+    if (!thisQuestion || (!thisQuestion.shadowRoot?.activeElement && document.activeElement === this)) {
       return false;
     }
 
