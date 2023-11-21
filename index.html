@@ -82,6 +82,12 @@
       padding: 0;
     }
 
+    .fs-no-script {
+      font-size: var(--large-paragraph);
+      margin: var(--spacing-unit);
+      text-align: center;
+    }
+
     body.has-modal {
       overflow: hidden;
     }
@@ -91,6 +97,10 @@
 
 <body>
   <flow-survey></flow-survey>
+
+  <noscript>
+    <p class="fs-no-script">You must have JavaScript enabled in order to fill out this questionnaire.</p>
+  </noscript>
 
   <script type="module" src="./out-tsc/src/flow-survey.js"></script>
 </body>

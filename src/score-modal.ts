@@ -8,16 +8,25 @@ import { modalStyles } from './css/modal';
 
 @customElement('score-modal')
 export class ScoreModal extends LitElement {
-  @property({ type: Array }) answers!: number[];
+  @property({ type: Array }) answers: number[] = [];
+
   @property({ type: Number }) maxPoints: number = 0;
+
   @property({ type: Number }) totalPoints: number = 0;
+
   @property({ type: String }) verdict: string = '';
+
   @property({ type: String }) verdictLowercase: string = '';
+
   closeButton?: HTMLElement | null;
+
   isVisible: boolean = false;
-  private closeButtonId: string = 'close-button';
-  private modalTitleId: string = 'modal-title';
-  private modalDescriptionId: string = 'modal-description';
+
+  private _closeButtonId: string = 'close-button';
+
+  private _modalTitleId: string = 'modal-title';
+
+  private _modalDescriptionId: string = 'modal-description';
 
   static styles = [
     animationStyles,
@@ -38,15 +47,15 @@ export class ScoreModal extends LitElement {
     this.classList.add(CSS_CLASSES.MODAL);
     this.setAttribute('role', 'dialog');
     this.setAttribute('aria-modal', 'true');
-    this.setAttribute('aria-labelledby', this.modalTitleId);
-    this.setAttribute('aria-describedby', this.modalDescriptionId);
+    this.setAttribute('aria-labelledby', this._modalTitleId);
+    this.setAttribute('aria-describedby', this._modalDescriptionId);
     this.setAttribute('aria-hidden', 'true');
 
     this.updateVerdict();
   }
 
   protected firstUpdated() {
-    this.closeButton = this.shadowRoot?.getElementById(this.closeButtonId);
+    this.closeButton = this.shadowRoot?.getElementById(this._closeButtonId);
   }
 
   updateVerdict() {
@@ -75,7 +84,6 @@ export class ScoreModal extends LitElement {
     document.body.classList.add(CSS_CLASSES.HAS_MODAL);
     window.addEventListener('keydown', this.onKeydown);
     this.focus();
-
   }
 
   hideVerdict() {
@@ -85,17 +93,16 @@ export class ScoreModal extends LitElement {
 
     // Set immidately to avoid double closing
     this.isVisible = false;
+    window.removeEventListener('keydown', this.onKeydown);
 
     // Finish closing the modal at the end of the fadeOut animation
     this.addEventListener('animationend', () => {
       this.ariaHidden = 'true';
       document.body.classList.remove(CSS_CLASSES.HAS_MODAL);
       this.classList.remove(CSS_CLASSES.MODAL_FADE_OUT);
-      window.removeEventListener('keydown', this.onKeydown);
     }, { once: true });
     // Add the class to begin the animation
     this.classList.add(CSS_CLASSES.MODAL_FADE_OUT);
-    
   }
   
   resetVerdict() {
@@ -113,7 +120,6 @@ export class ScoreModal extends LitElement {
     if (event.key === 'Tab' || event.keyCode === 9) {
       this.closeButton?.focus();
       event.preventDefault();
-      return;
     } 
   }
 
@@ -125,9 +131,9 @@ export class ScoreModal extends LitElement {
   protected render() {
     return html`
       <div class="fs-score-modal__header">
-        <h2 id="${this.modalTitleId}" class="fs-score-modal__title fs-t-large-heading">Your score</h2>
+        <h2 id="${this._modalTitleId}" class="fs-score-modal__title fs-t-large-heading">Your score</h2>
         <p class="fs-score-modal__points">${this.totalPoints}<span class="fs-score-modal__out-of">/${this.maxPoints}</span></p>
-        <p id="${this.modalDescriptionId}" class="fs-score-modal__verdict">${this.verdict}</p>
+        <p id="${this._modalDescriptionId}" class="fs-score-modal__verdict">${this.verdict}</p>
       </div>
       <div class="fs-score-modal__body">
         <h3 class="fs-score-modal__subtitle fs-t-large-paragraph">What does this mean?</h3>
@@ -135,9 +141,9 @@ export class ScoreModal extends LitElement {
         <p class="fs-score-modal__disclaimer">Remember that this questionnaire is not a complete diagnosis, but rather a guideline.</p>
         <button
           @click=${this._onCloseClick}
-          class="fs-button fs-button--primary fs-score-modal__close
+          class="fs-button fs-button--primary fs-score-modal__close"
           form="flow-survey"
-          id="${this.closeButtonId}"
+          id="${this._closeButtonId}"
           type="reset"
         >Close</button>
       </div>

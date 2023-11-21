@@ -15,10 +15,14 @@ interface Response {
 @customElement('survey-question')
 export class SurveyQuestion extends LitElement {
   @property({ type: Number }) number!: number;
+
   @property({ type: Object }) question!: Question;
+
   @property({ type: Object }) responses: Response[] = [];
-  private firstInput?: HTMLInputElement | null;
-  private answerTimeout: any;
+
+  private _firstInput?: HTMLInputElement | null;
+
+  private _answerTimeout: any;
 
   static styles = [
     animationStyles,
@@ -34,16 +38,16 @@ export class SurveyQuestion extends LitElement {
     this.id = this.question.title.replace(/\W/g, '-').toLowerCase();
 
     // Possible answers range from 0 to MAX, array is always 1 longer
-    this.responses = [...(new Array(MAX_POINTS_PER_QUESTION + 1))]
-      .map((_, value) => ({
-        // Labels for even values only
-        label: value % 2 ? null : this.question.responses[value / 2],
-        value,
-      }));
+    const numberOfResponses = MAX_POINTS_PER_QUESTION + 1;
+    this.responses = Array.from({ length: numberOfResponses }, (_, value) => ({
+      // Labels for even values only
+      label: value % 2 ? null : this.question.responses[value / 2],
+      value,
+    }));
   }
 
   protected firstUpdated() {
-    this.firstInput = this.shadowRoot?.querySelector('input') as HTMLInputElement;
+    this._firstInput = this.shadowRoot?.querySelector('input') as HTMLInputElement;
   }
 
   answerSelected(answer: number) {
@@ -58,17 +62,19 @@ export class SurveyQuestion extends LitElement {
   }
 
   giveFocus() {
-    this.firstInput?.focus();
+    this._firstInput?.focus();
   }
 
   resetInput() {
-    const selectedInput = this.shadowRoot?.querySelector('input:checked') as HTMLInputElement;
-    selectedInput.checked = false;
+    const selectedInput = this.shadowRoot?.querySelector<HTMLInputElement>('input:checked');
+    if (selectedInput) {
+      selectedInput.checked = false;
+    }
   }
 
   private _answerSelected(answer: number) {
-    clearTimeout(this.answerTimeout);
-    this.answerTimeout = setTimeout(() => this.answerSelected(answer), 900);
+    clearTimeout(this._answerTimeout);
+    this._answerTimeout = setTimeout(() => this.answerSelected(answer), 900);
   }
 
   protected render() {
@@ -86,7 +92,7 @@ export class SurveyQuestion extends LitElement {
                 id="${this.id}-${response.value}"
                 name="${this.id}"
                 type="radio"
-                value="${response.value}"
+                .value=${response.value}
               />
               <span class="fs-answer__number">${response.value}</span>
               ${response.label && html`<span class="fs-answer__text">${response.label}</span>`}

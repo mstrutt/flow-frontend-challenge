@@ -91,7 +91,7 @@ describe('ScoreModal', () => {
       const answers = [0];
       element = await fixture(html`<score-modal .answers=${answers}></score-modal>`);
 
-      const verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      const verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict).to.exist;
       expect(verdict.textContent).not.to.equal('');
     });
@@ -99,64 +99,64 @@ describe('ScoreModal', () => {
     it('gives the correct verdict for the points', async () => {
       // No-minimal
       element = await fixture(html`<score-modal .answers=${[0]}></score-modal>`);
-      let verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      let verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('No or minimal depression');
 
       element = await fixture(html`<score-modal .answers=${[6]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('No or minimal depression');
 
       element = await fixture(html`<score-modal .answers=${[12]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('No or minimal depression');
 
       // Light
       element = await fixture(html`<score-modal .answers=${[13]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Light depression');
 
       element = await fixture(html`<score-modal .answers=${[16]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Light depression');
 
       element = await fixture(html`<score-modal .answers=${[19]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Light depression');
 
       // Moderate
       element = await fixture(html`<score-modal .answers=${[20]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Moderate depression');
 
       element = await fixture(html`<score-modal .answers=${[28]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Moderate depression');
 
       element = await fixture(html`<score-modal .answers=${[34]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Moderate depression');
 
       // Severe
       element = await fixture(html`<score-modal .answers=${[35]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Severe depression');
 
       element = await fixture(html`<score-modal .answers=${[45]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Severe depression');
 
       element = await fixture(html`<score-modal .answers=${[54]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Severe depression');
     });
 
     it('handles scores outside of range without breaking', async () => {
       element = await fixture(html`<score-modal .answers=${[-50]}></score-modal>`);
-      let verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      let verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('');
 
       element = await fixture(html`<score-modal .answers=${[999999]}></score-modal>`);
-      verdict = element.shadowRoot!.getElementById(element['modalDescriptionId'])!;
+      verdict = element.shadowRoot!.getElementById(element['_modalDescriptionId'])!;
       expect(verdict.textContent).to.equal('Severe depression');
     });
   });
@@ -288,15 +288,17 @@ describe('ScoreModal', () => {
       document.body.classList.add(CSS_CLASSES.HAS_MODAL);
       
       element.hideVerdict();
+      expect(window.removeEventListener).to.have.been.calledOnce;
+      // None of these should change until the animationend event
       expect(element.ariaHidden).to.equal('false');
       expect(document.body.classList.contains(CSS_CLASSES.HAS_MODAL)).to.be.true;
       expect(element.classList.contains(CSS_CLASSES.MODAL_FADE_OUT)).to.be.true;
-      expect(window.removeEventListener).not.to.have.been.called;
 
-      element.dispatchEvent(new AnimationEvent('animationend', {}));
+      element.dispatchEvent(new AnimationEvent('animationend'));
       expect(element.ariaHidden).to.equal('true');
       expect(document.body.classList.contains(CSS_CLASSES.HAS_MODAL)).to.be.false;
       expect(element.classList.contains(CSS_CLASSES.MODAL_FADE_OUT)).to.be.false;
+      // Still only once
       expect(window.removeEventListener).to.have.been.calledOnce;
     });
   });

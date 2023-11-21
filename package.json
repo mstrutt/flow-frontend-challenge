@@ -57,19 +57,24 @@
     "plugins": [
       "@typescript-eslint"
     ],
+    "globals": {
+      "NodeListOf": "readonly"
+    },
     "rules": {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "error"
       ],
       "import/no-unresolved": "off",
-      "import/extensions": [
+      "import/extensions": "off",
+      "dot-notation": [
         "error",
-        "always",
         {
-          "ignorePackages": true
+          "allowPattern": "^_.+$"
         }
-      ]
+      ],
+      "wc/no-self-class": "off",
+      "wc/guard-super-call": "off"
     }
   },
   "prettier": {

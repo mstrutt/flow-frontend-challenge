@@ -2,8 +2,8 @@ import { LitElement, html } from 'lit';
 import { property, customElement, eventOptions } from 'lit/decorators.js';
 
 import { Question, QuestionAnsweredEvent } from './interfaces';
-import { SurveyQuestion } from './survey-question';
-import { ScoreModal } from './score-modal';
+import type { SurveyQuestion } from './survey-question';
+import type { ScoreModal } from './score-modal';
 
 import { helperStyles } from './css/shared';
 import { surveyStyles } from './css/survey';
@@ -12,14 +12,17 @@ import './survey-question';
 import './score-modal';
 
 const questions = new URL('../../assets/Madrs-s.json', import.meta.url).href;
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion)').matches;
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion)').matches;
 
 @customElement('flow-survey')
 export class FlowSurvey extends LitElement {
-  @property({ type: Array }) answers = [] as number[];
-  @property({ type: Array }) questions = [] as Question[];
-  scoreModal?: ScoreModal | null;
-  questionComponenets?: NodeListOf<SurveyQuestion>;
+  @property({ type: Array }) answers: number[] = [];
+  
+  @property({ type: Array }) questions: Question[] = [];
+  
+  private _scoreModal?: ScoreModal | null;
+  
+  private _questionComponenets?: NodeListOf<SurveyQuestion>;
 
   static styles = [
     helperStyles,
@@ -29,30 +32,30 @@ export class FlowSurvey extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     
-    const questionData: Question[] = await fetch(questions)
-      .then(response => response.json());
+    const response = await fetch(questions)
+    const questionData = await response.json() as Question[];
     this.questions = questionData;
 
     this.answers = new Array(this.questions.length);
 
-    this.scoreModal?.updateVerdict();
+    this._scoreModal?.updateVerdict();
 
     // Wait for the questions to be rendered
     await this.updateComplete;
-    this.questionComponenets = this.shadowRoot?.querySelectorAll('survey-question');
+    this._questionComponenets = this.shadowRoot?.querySelectorAll('survey-question');
   }
 
   protected firstUpdated() {
-    this.scoreModal = this.shadowRoot?.querySelector('score-modal');
+    this._scoreModal = this.shadowRoot?.querySelector('score-modal');
   }
   
   private _updateVerdict() {
-    this.scoreModal?.updateVerdict();
+    this._scoreModal?.updateVerdict();
   }
 
   @eventOptions({ passive: true })
   private _resetForm() {
-    this.questionComponenets?.forEach((component, index) => {
+    this._questionComponenets?.forEach((component, index) => {
       component.resetInput();
       // Focus the first question
       if (!index) {
@@ -75,13 +78,13 @@ export class FlowSurvey extends LitElement {
     // If the focus has already left the question, don't adjust the focus or scroll.
     // Safari doesn't track activeElement properly in the shadowDOM - checking the
     // document.activeElement is this element prevents a false positive.
-    const thisQuestion = this.questionComponenets && this.questionComponenets[number];
+    const thisQuestion = this._questionComponenets && this._questionComponenets[number];
     if (!thisQuestion || (!thisQuestion.shadowRoot?.activeElement && document.activeElement === this)) {
-      return false;
+      return;
     }
 
     // Focus and scroll smoothly to the next question
-    const nextQuestion = this.questionComponenets && this.questionComponenets[number + 1];
+    const nextQuestion = this._questionComponenets && this._questionComponenets[number + 1];
     if (nextQuestion) {
       // Get the current scroll coordinates
       const x = window.scrollX
@@ -92,7 +95,7 @@ export class FlowSurvey extends LitElement {
       window.scrollTo(x, y);
       // Smoothly scroll to the next question
       nextQuestion.parentElement?.scrollIntoView({
-        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
       });
     }
   }
