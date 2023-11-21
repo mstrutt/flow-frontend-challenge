@@ -77,6 +77,7 @@ export const answerStyles = css`
       calc(var(--spacing-unit) / 3)
       0;
     text-align: center;
+    transition: background-color 50ms;
     width: var(--tap-target-size);
   }
 
@@ -86,7 +87,7 @@ export const answerStyles = css`
 
   .fs-answer__input:checked + .fs-answer__number {
     animation-delay: .2s;
-    animation-duration: .35s;
+    animation-duration: .45s;
     animation-timing-function: ease-in-out;
     animation-fill-mode: both;
     animation-name: flashUIColor;

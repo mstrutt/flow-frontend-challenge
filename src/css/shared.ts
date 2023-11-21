@@ -59,14 +59,15 @@ export const typographyStyles = css`
 
 export const animationStyles = css`
   @keyframes flashUIColor {
-    33%,
+    from,
+    50%,
     to {
       background-color: var(--ui-color--active);
       opacity: 1;
     }
 
-    from,
-    66% {
+    25%,
+    75% {
       background-color: var(--ui-color);
       opacity: .9;
     }
