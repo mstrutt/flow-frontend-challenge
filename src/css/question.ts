@@ -14,7 +14,7 @@ export const questionStyles = css`
 
   .fs-question__question {
     margin-top: 0.6em;
-    margin-bottom: 1.2em;  
+    margin-bottom: 1.2em;
   }
 
   .fs-question__answers {
@@ -37,7 +37,7 @@ export const questionStyles = css`
     }
 
     .fs-question__question {
-      margin-top: calc(var(--spacing-unit) * 4/3);
+      margin-top: calc(var(--spacing-unit) * 4 / 3);
     }
 
     .fs-question__paragraph {
@@ -71,7 +71,11 @@ export const answerStyles = css`
     flex-shrink: 0;
     height: var(--tap-target-size);
     line-height: var(--tap-target-size);
-    margin: calc(var(--spacing-unit) / 3) var(--spacing-unit) calc(var(--spacing-unit) / 3) 0;
+    margin:
+      calc(var(--spacing-unit) / 3)
+      var(--spacing-unit)
+      calc(var(--spacing-unit) / 3)
+      0;
     text-align: center;
     width: var(--tap-target-size);
   }

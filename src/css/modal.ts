@@ -23,16 +23,23 @@ export const modalStyles = css`
     animation-name: fadeOut;
   }
 
-  :host([aria-hidden="true"]) {
+  :host([aria-hidden='true']) {
     display: none;
   }
 
   .fs-score-modal__header {
-    background-image: radial-gradient(var(--score-background), var(--score-background) 70%, transparent 70%);
+    background-image: radial-gradient(
+      var(--score-background),
+      var(--score-background) 70%,
+      transparent 70%
+    );
     background-position: 50% 99%;
     background-size: calc(250% - 65vw) 150%;
     color: var(--score-text);
-    padding: calc(var(--spacing-unit) + 16.87vh) calc(var(--spacing-unit) * 3) 4.25em;
+    padding:
+      calc(var(--spacing-unit) + 16.87vh)
+      calc(var(--spacing-unit) * 3)
+      4.25em;
   }
 
   .fs-score-modal__title {

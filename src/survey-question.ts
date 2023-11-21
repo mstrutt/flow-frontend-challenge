@@ -8,8 +8,8 @@ import { questionStyles, answerStyles } from './css/question';
 import { animationStyles, helperStyles, typographyStyles } from './css/shared';
 
 interface Response {
-  label: string|null,
-  value: number,
+  label: string | null;
+  value: number;
 }
 
 @customElement('survey-question')
@@ -31,7 +31,7 @@ export class SurveyQuestion extends LitElement {
     questionStyles,
     answerStyles,
   ];
-  
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -47,12 +47,12 @@ export class SurveyQuestion extends LitElement {
   }
 
   protected firstUpdated() {
-    this._firstInput = this.shadowRoot?.querySelector('input') as HTMLInputElement;
+    this._firstInput = this.shadowRoot?.querySelector<HTMLInputElement>('input');
   }
 
   answerSelected(answer: number) {
     const questionAnsweredEvent = new CustomEvent('question-answered', {
-      detail: { 
+      detail: {
         number: this.number,
         answer,
       },
@@ -66,7 +66,8 @@ export class SurveyQuestion extends LitElement {
   }
 
   resetInput() {
-    const selectedInput = this.shadowRoot?.querySelector<HTMLInputElement>('input:checked');
+    const selectedInput =
+      this.shadowRoot?.querySelector<HTMLInputElement>('input:checked');
     if (selectedInput) {
       selectedInput.checked = false;
     }
@@ -80,9 +81,15 @@ export class SurveyQuestion extends LitElement {
   protected render() {
     return html`
       <fieldset class="fs-question">
-        <legend class="fs-question__title fs-t-large-heading">${this.question.title}</legend>
-        <p class="fs-question__question fs-t-large-paragraph">${this.question.question}</p>
-        ${this.question.paragraph && html`<p class="fs-question__paragraph">${this.question.paragraph}</p>`}
+        <legend class="fs-question__title fs-t-large-heading">
+          ${this.question.title}
+        </legend>
+        <p class="fs-question__question fs-t-large-paragraph">
+          ${this.question.question}
+        </p>
+        ${this.question.paragraph && html`
+          <p class="fs-question__paragraph">${this.question.paragraph}</p>
+        `}
         <div class="fs-question__answers">
           ${this.responses.map(response => html`
             <label class="fs-answer" for="${this.id}-${response.value}">
@@ -95,7 +102,9 @@ export class SurveyQuestion extends LitElement {
                 .value=${response.value}
               />
               <span class="fs-answer__number">${response.value}</span>
-              ${response.label && html`<span class="fs-answer__text">${response.label}</span>`}
+              ${response.label && html`
+                <span class="fs-answer__text">${response.label}</span>
+              `}
             </label>
           `)}
         </div>

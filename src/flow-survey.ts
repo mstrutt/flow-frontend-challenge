@@ -17,11 +17,11 @@ const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion)')
 @customElement('flow-survey')
 export class FlowSurvey extends LitElement {
   @property({ type: Array }) answers: number[] = [];
-  
+
   @property({ type: Array }) questions: Question[] = [];
-  
+
   private _scoreModal?: ScoreModal | null;
-  
+
   private _questionComponenets?: NodeListOf<SurveyQuestion>;
 
   static styles = [
@@ -31,8 +31,8 @@ export class FlowSurvey extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    
-    const response = await fetch(questions)
+
+    const response = await fetch(questions);
     const questionData = await response.json() as Question[];
     this.questions = questionData;
 
@@ -48,7 +48,7 @@ export class FlowSurvey extends LitElement {
   protected firstUpdated() {
     this._scoreModal = this.shadowRoot?.querySelector('score-modal');
   }
-  
+
   private _updateVerdict() {
     this._scoreModal?.updateVerdict();
   }
@@ -71,15 +71,18 @@ export class FlowSurvey extends LitElement {
     if (typeof answer !== 'number' || typeof number !== 'number') {
       return;
     }
-    
+
     this.answers[number] = answer;
     this._updateVerdict();
-    
+
     // If the focus has already left the question, don't adjust the focus or scroll.
     // Safari doesn't track activeElement properly in the shadowDOM - checking the
     // document.activeElement is this element prevents a false positive.
     const thisQuestion = this._questionComponenets && this._questionComponenets[number];
-    if (!thisQuestion || (!thisQuestion.shadowRoot?.activeElement && document.activeElement === this)) {
+    if (
+      !thisQuestion ||
+      (!thisQuestion.shadowRoot?.activeElement && document.activeElement === this)
+    ) {
       return;
     }
 
@@ -87,7 +90,7 @@ export class FlowSurvey extends LitElement {
     const nextQuestion = this._questionComponenets && this._questionComponenets[number + 1];
     if (nextQuestion) {
       // Get the current scroll coordinates
-      const x = window.scrollX
+      const x = window.scrollX;
       const y = window.scrollY;
       // Shift the focus
       nextQuestion.giveFocus();
@@ -105,15 +108,29 @@ export class FlowSurvey extends LitElement {
       <main>
         <h1 class="fs-h-visually-hidden">Flow Survey</h1>
 
-        <form class="fs-form" id="flow-survey" @question-answered=${this._onQuestionAnswered}>
-          ${this.questions.map((question, number) => html`
-            <section class="fs-form__section" id="question-${number + 1}">
-              <h2 class="fs-progress-header fs-t-large-heading">Question ${number + 1}/${this.questions.length}</h2>
-              <survey-question .question=${question} .number=${number}></survey-question>
-            </section>
-          `)}
+        <form
+          @question-answered=${this._onQuestionAnswered}
+          class="fs-form"
+          id="flow-survey"
+        >
+          ${this.questions.map(
+            (question, number) => html`
+              <section class="fs-form__section" id="question-${number + 1}">
+                <h2 class="fs-progress-header fs-t-large-heading">
+                  Question ${number + 1}/${this.questions.length}
+                </h2>
+                <survey-question
+                  .question=${question}
+                  .number=${number}
+                ></survey-question>
+              </section>
+            `
+          )}
         </form>
-        <score-modal @reset=${this._resetForm} .answers=${this.answers}></score-modal>
+        <score-modal
+          @reset=${this._resetForm}
+          .answers=${this.answers}
+        ></score-modal>
       </main>
     `;
   }

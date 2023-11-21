@@ -25,7 +25,7 @@ export const surveyStyles = css`
   .fs-form__section {
     min-height: 100vh;
     padding-top: 2em;
-    padding-bottom:  12vh;
+    padding-bottom: 12vh;
   }
 
   .fs-progress-header {
