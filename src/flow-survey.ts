@@ -49,6 +49,39 @@ export class FlowSurvey extends LitElement {
     this._scoreModal = this.shadowRoot?.querySelector('score-modal');
   }
 
+  questionAnswered(questionIndex: number, answer: number) {
+    this.answers[questionIndex] = answer;
+    this._updateVerdict();
+
+    // If the focus has already left the question, don't adjust the focus or scroll.
+    // Safari doesn't track activeElement properly in the shadowDOM - checking the
+    // document.activeElement is this element prevents a false positive.
+    const thisQuestion = this._questionComponenets && this._questionComponenets[questionIndex];
+    if (
+      !thisQuestion ||
+      (!thisQuestion.shadowRoot?.activeElement && document.activeElement === this)
+    ) {
+      return;
+    }
+
+    // Focus and scroll smoothly to the next question
+    const nextQuestion = this._questionComponenets && this._questionComponenets[questionIndex + 1];
+    if (!nextQuestion) {
+      return;
+    }
+    // Get the current scroll coordinates
+    const x = window.scrollX;
+    const y = window.scrollY;
+    // Shift the focus
+    nextQuestion.giveFocus();
+    // Reset scroll position to avoid the visual jump of moving focus
+    window.scrollTo(x, y);
+    // Smoothly scroll to the next question
+    nextQuestion.parentElement?.scrollIntoView({
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+  }
+
   private _updateVerdict() {
     this._scoreModal?.updateVerdict();
   }
@@ -72,35 +105,7 @@ export class FlowSurvey extends LitElement {
       return;
     }
 
-    this.answers[number] = answer;
-    this._updateVerdict();
-
-    // If the focus has already left the question, don't adjust the focus or scroll.
-    // Safari doesn't track activeElement properly in the shadowDOM - checking the
-    // document.activeElement is this element prevents a false positive.
-    const thisQuestion = this._questionComponenets && this._questionComponenets[number];
-    if (
-      !thisQuestion ||
-      (!thisQuestion.shadowRoot?.activeElement && document.activeElement === this)
-    ) {
-      return;
-    }
-
-    // Focus and scroll smoothly to the next question
-    const nextQuestion = this._questionComponenets && this._questionComponenets[number + 1];
-    if (nextQuestion) {
-      // Get the current scroll coordinates
-      const x = window.scrollX;
-      const y = window.scrollY;
-      // Shift the focus
-      nextQuestion.giveFocus();
-      // Reset scroll position to avoid the visual jump of moving focus
-      window.scrollTo(x, y);
-      // Smoothly scroll to the next question
-      nextQuestion.parentElement?.scrollIntoView({
-        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-      });
-    }
+    this.questionAnswered(number, answer);
   }
 
   protected render() {
