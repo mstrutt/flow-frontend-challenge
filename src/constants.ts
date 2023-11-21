@@ -1,7 +1,7 @@
 export const SCORING_RULES = [{
   lower: 0,
   upper: 12,
-  verdict: 'No or minmal depression',
+  verdict: 'No or minimal depression',
 }, {
   lower: 13,
   upper: 19,
