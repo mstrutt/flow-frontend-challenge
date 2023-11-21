@@ -88,17 +88,26 @@ export class SurveyQuestion extends LitElement {
           ${this.question.question}
         </p>
         ${this.question.paragraph && html`
-          <p class="fs-question__paragraph">${this.question.paragraph}</p>
+          <p class="fs-question__paragraph">
+            ${this.question.paragraph}
+          </p>
         `}
+        <div id="${this.id}-description" class="fs-h-screen-reader-text">
+          ${this.question.title}.
+          ${this.question.question}
+          ${this.question.paragraph}
+        </div>
         <div class="fs-question__answers">
           ${this.responses.map(response => html`
             <label class="fs-answer" for="${this.id}-${response.value}">
               <input
                 @input=${() => this._answerSelected(response.value)}
+                aria-describedby="${this.id}-description"
                 class="fs-answer__input fs-h-visually-hidden"
                 id="${this.id}-${response.value}"
                 name="${this.id}"
                 type="radio"
+                required
                 .value=${response.value}
               />
               <span class="fs-answer__number">${response.value}</span>

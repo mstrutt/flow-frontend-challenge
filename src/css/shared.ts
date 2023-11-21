@@ -38,6 +38,11 @@ export const helperStyles = css`
     white-space: nowrap;
     width: 1px;
   }
+
+  /* This text is to be hidden visually and only referenced by ID by screen readers */
+  [id].fs-h-screen-reader-text {
+    display: none !important;
+  }
 `;
 
 export const typographyStyles = css`
