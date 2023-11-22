@@ -119,6 +119,7 @@ export class ScoreModal extends LitElement {
 
   onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' || event.keyCode === 27) {
+      this.resetVerdict();
       this.hideVerdict();
       return;
     }

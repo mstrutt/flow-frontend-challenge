@@ -323,17 +323,21 @@ describe('ScoreModal', () => {
   describe('onKeydown()', () => {
     beforeEach(() => {
       sinon.spy(element, 'hideVerdict');
+      sinon.spy(element, 'resetVerdict');
       sinon.spy(element.closeButton!, 'focus');
     });
 
     it('calls hideVerdict on an Escape key', () => {
       expect(element.hideVerdict).not.to.have.been.called;
+      expect(element.resetVerdict).not.to.have.been.called;
 
       element.onKeydown(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
       expect(element.hideVerdict).not.to.have.been.called;
+      expect(element.resetVerdict).not.to.have.been.called;
 
       element.onKeydown(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(element.hideVerdict).to.have.been.calledOnce;
+      expect(element.resetVerdict).to.have.been.called;
     });
 
     it('focuses the closeButton on a Tab key', () => {
